@@ -4,9 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-reqwest = "0.11"
-tokio = { version = "1.28", features = ["macros", "fs", "rt", "rt-multi-thread"] }
-async-trait = "0.1.88"
+reqwest = "0.12.15"
+tokio = { version = "1.44.1", features = ["macros", "fs", "rt", "rt-multi-thread"] }
 
 [profile.release]
 strip = true	# strip symbols
