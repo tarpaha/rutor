@@ -7,7 +7,3 @@ edition = "2024"
 reqwest = "0.12.15"
 scraper = "0.23.1"
 tokio = { version = "1.44.1", features = ["macros", "fs", "rt", "rt-multi-thread"] }
-
-[profile.release]
-strip = true	# strip symbols
-opt-level = "z" # optimize for size
