@@ -35,9 +35,15 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let mut filtered_torrents: Vec<Torrent> = by_name.into_values().collect();
     filtered_torrents.sort_by(|a, b| b.seeders.cmp(&a.seeders));
-    for f in filtered_torrents {
-        println!("{}: {}", f.seeders, f.title);
+    for torrent in filtered_torrents.iter().take(10) {
+        print_torrent(torrent);
     }
 
     Ok(())
+}
+
+fn print_torrent(torrent: &Torrent) {
+    println!(
+        "{}: \x1B]8;;https://rutor.info{}\x07{}\x1B]8;;\x07",
+        torrent.seeders, torrent.url, torrent.title);
 }
