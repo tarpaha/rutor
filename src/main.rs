@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 use std::error::Error;
+use itertools::Itertools;
+
 
 mod loader;
 mod parser;
@@ -13,7 +15,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let content = load(Source::Url("https://rutor.info/browse/0/1/0/2".to_string())).await?;
     let torrents = parser::parse_torrents(&content)?;
 
-    let mut by_name: HashMap<String, Torrent> = HashMap::new();
+    let mut best_seeders_dict: HashMap<String, Torrent> = HashMap::new();
     for torrent in &torrents {
         let title_before_slash = torrent
             .title
@@ -23,7 +25,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
             .trim()
             .to_string();
 
-        by_name
+        best_seeders_dict
             .entry(title_before_slash.to_string())
             .and_modify(|existing| {
                 if torrent.seeders > existing.seeders {
@@ -33,10 +35,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
             .or_insert_with(|| torrent.clone());
     }
 
-    let mut filtered_torrents: Vec<Torrent> = by_name.into_values().collect();
-    filtered_torrents.sort_by(|a, b| b.seeders.cmp(&a.seeders));
-    for torrent in filtered_torrents.iter().take(10) {
-        print_torrent(torrent);
+    let best_torrents = best_seeders_dict
+        .into_values()
+        .sorted_by(|a, b| b.seeders.cmp(&a.seeders))
+        .take(10);
+    
+    for torrent in best_torrents {
+        print_torrent(&torrent);
     }
 
     Ok(())
