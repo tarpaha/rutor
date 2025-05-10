@@ -13,7 +13,7 @@ pub struct Torrent {
     pub date: String
 }
 
-pub fn parse_torrents(html_content: &str) -> Result<Vec<Torrent>, Box<dyn Error>> {
+pub fn parse(html_content: &str) -> Result<Vec<Torrent>, Box<dyn Error>> {
 
     let document = Html::parse_document(html_content);
 
