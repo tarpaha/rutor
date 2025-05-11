@@ -2,6 +2,8 @@
 name = "rutor"
 version = "0.1.0"
 edition = "2024"
+description = "Prints top movie torrents from rutor.info"
+authors = ["tarpaha <ppopchikovsky@gmail.com>"]
 
 [dependencies]
 reqwest = "0.12.15"
@@ -9,3 +11,4 @@ scraper = "0.23.1"
 tokio = { version = "1.44.2", features = ["full"] }
 itertools = "0.14.0"
 textwrap = "0.16.2"
+clap = { version = "4.5.38", features = ["derive"] }

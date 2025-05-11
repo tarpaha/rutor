@@ -6,15 +6,17 @@ use tokio::sync::mpsc;
 mod loader;
 mod index_parser;
 mod desc_parser;
+mod args;
 
 use index_parser::Torrent;
-
 use loader::{Source, load};
 
-const N: usize = 5;
+const DEFAULT_NUMBER_OF_TORRENTS: usize = 5;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    let number_of_torrents = args::parse_args(DEFAULT_NUMBER_OF_TORRENTS);
+
     //let content = load(Source::File("page.html".to_string())).await?;
     let content = load(Source::Url("https://rutor.info/browse/0/1/0/2".to_string())).await?;
     let torrents = index_parser::parse(&content)?;
@@ -42,10 +44,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let best_torrents: Vec<Torrent> = best_seeders_dict
         .into_values()
         .sorted_by(|a, b| b.seeders.cmp(&a.seeders))
-        .take(N)
+        .take(number_of_torrents)
         .collect();
 
-    let (tx, mut rx) = mpsc::channel::<(usize, String)>(N);
+    let (tx, mut rx) = mpsc::channel::<(usize, String)>(number_of_torrents);
 
     for idx in 0..best_torrents.len() {
         let tx = tx.clone();
@@ -59,13 +61,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
     }
     drop(tx);
 
-    let mut buffer: Vec<Option<String>> = vec![None; N];
+    let mut buffer: Vec<Option<String>> = vec![None; number_of_torrents];
 
     let mut next_to_print = 0;
     while let Some((idx, res)) = rx.recv().await {
         buffer[idx] = Some(res);
 
-        while next_to_print < N {
+        while next_to_print < number_of_torrents {
             if let Some(description) = buffer[next_to_print].take() {
                 print_torrent(&best_torrents[next_to_print], &description);
                 next_to_print += 1;
