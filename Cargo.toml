@@ -8,7 +8,7 @@ authors = ["tarpaha <ppopchikovsky@gmail.com>"]
 [dependencies]
 reqwest = "0.12.15"
 scraper = "0.23.1"
-tokio = { version = "1.44.2", features = ["full"] }
+tokio = { version = "1.45.0", features = ["full"] }
 itertools = "0.14.0"
 textwrap = "0.16.2"
 clap = { version = "4.5.38", features = ["derive"] }
