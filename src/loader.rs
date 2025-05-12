@@ -13,7 +13,7 @@ pub async fn load(source: Source) -> Result<String, Box<dyn Error>> {
         Source::Url(url) => {
             let response = reqwest::get(&url)
                 .await
-                .map_err(|e| format!("Failed to get response from '{}': {}", &url, e))?
+                .map_err(|e| format!("Failed to get a response from '{}': {}", &url, e))?
                 .error_for_status()
                 .map_err(|e| format!("Server returned an error for '{}': {}", &url, e))?;
             let content = response.text()
