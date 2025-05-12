@@ -17,7 +17,6 @@ const DEFAULT_NUMBER_OF_TORRENTS: usize = 5;
 async fn main() -> Result<(), Box<dyn Error>> {
     let number_of_torrents = args::parse_args(DEFAULT_NUMBER_OF_TORRENTS);
 
-    //let content = load(Source::File("index.html".to_string())).await?;
     let content = load(Source::Url("https://rutor.info/browse/0/1/0/2".to_string())).await?;
     let torrents = index_parser::parse(&content)?;
 
