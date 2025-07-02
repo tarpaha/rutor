@@ -21,7 +21,7 @@ fn get_filtered_chars(s: &str) -> Vec<char> {
         .collect()
 }
 
-fn find_first_russian(chars: &[char]) -> Option<usize> {
+fn find_first_russian(chars: &Vec<char>) -> Option<usize> {
     let russian_chars: HashSet<char> =
         ('а'..='я').chain(std::iter::once('ё')).collect();
     chars.iter().enumerate()
