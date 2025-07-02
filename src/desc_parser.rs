@@ -21,8 +21,9 @@ fn get_filtered_chars(s: &str) -> Vec<char> {
         .collect()
 }
 
-fn find_first_russian(chars: &Vec<char>) -> Option<usize> {
-    let russian_chars: HashSet<char> = ('а'..='я').collect();
+fn find_first_russian(chars: &[char]) -> Option<usize> {
+    let russian_chars: HashSet<char> =
+        ('а'..='я').chain(std::iter::once('ё')).collect();
     chars.iter().enumerate()
         .find(|(_, c)| russian_chars.contains(&c.to_lowercase().next().unwrap()))
         .map(|(i, _)| i)
@@ -58,6 +59,11 @@ mod test_first_russian {
     #[test]
     fn mixed_case() {
         assert_eq!(find_first_russian(&to_char_array("Test ПРИВЕТ привет")), Some(5));
+    }
+
+    #[test]
+    fn starts_with_io() {
+        assert_eq!(find_first_russian(&to_char_array("ёлка")), Some(0));
     }
 }
 
